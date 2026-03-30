@@ -11,8 +11,8 @@ function getUserId() {
   return id;
 }
 
-export const getHabits = () =>
-  axios.get(`${API}/habits`, { params: { userId: getUserId() } }).then((r) => r.data);
+export const getHabits = (signal) =>
+  axios.get(`${API}/habits`, { params: { userId: getUserId() }, signal }).then((r) => r.data);
 
 export const createHabit = (data) =>
   axios.post(`${API}/habits`, { ...data, userId: getUserId() }).then((r) => r.data);
@@ -26,5 +26,5 @@ export const completeHabit = (id) =>
 export const getHabitStats = (id) =>
   axios.get(`${API}/habits/${id}/stats`, { params: { userId: getUserId() } }).then((r) => r.data);
 
-export const getGlobalStats = () =>
-  axios.get(`${API}/stats`, { params: { userId: getUserId() } }).then((r) => r.data);
+export const getGlobalStats = (signal) =>
+  axios.get(`${API}/stats`, { params: { userId: getUserId() }, signal }).then((r) => r.data);

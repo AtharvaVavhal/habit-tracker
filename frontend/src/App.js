@@ -5,7 +5,7 @@ import HabitList from "./components/HabitList";
 import "./App.css";
 
 function AppInner() {
-  const { createHabit, initialLoading, isRefreshing, error } = useHabits();
+  const { createHabit, creatingHabit, initialLoading, isRefreshing, error } = useHabits();
   const [name, setName] = useState("");
   const [type, setType] = useState("daily");
 
@@ -41,7 +41,9 @@ function AppInner() {
           <option value="daily">Daily</option>
           <option value="weekly">Weekly</option>
         </select>
-        <button type="submit" className="btn btn--primary">Add</button>
+        <button type="submit" className="btn btn--primary" disabled={creatingHabit}>
+          {creatingHabit ? "..." : "Add"}
+        </button>
       </form>
 
       <HabitList />
