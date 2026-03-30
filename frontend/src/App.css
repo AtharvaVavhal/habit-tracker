@@ -1,0 +1,346 @@
+/* ── Layout ── */
+.app {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #1a1a1a;
+}
+
+.app-header {
+  margin-bottom: 28px;
+}
+
+.app-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 4px;
+  letter-spacing: -0.3px;
+}
+
+.app-status {
+  font-size: 13px;
+  color: #888;
+  min-height: 18px;
+}
+
+.app-status--error {
+  color: #c0392b;
+}
+
+/* ── Form ── */
+.habit-form {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.habit-form input {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  outline: none;
+  background: #fff;
+}
+
+.habit-form input:focus {
+  border-color: #555;
+}
+
+.habit-form select {
+  padding: 8px 10px;
+  font-size: 14px;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  background: #fff;
+  outline: none;
+  cursor: pointer;
+}
+
+/* ── Buttons ── */
+.btn {
+  padding: 8px 14px;
+  font-size: 13px;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.1s;
+}
+
+.btn:hover {
+  background: #f5f5f5;
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn--primary {
+  background: #1a1a1a;
+  color: #fff;
+  border-color: #1a1a1a;
+}
+
+.btn--primary:hover {
+  background: #333;
+}
+
+.btn--done {
+  color: #2e7d32;
+  border-color: #c8e6c9;
+  background: #f1f8f1;
+}
+
+.btn--done:hover {
+  background: #e0f2e1;
+}
+
+.btn--delete {
+  color: #b71c1c;
+  border-color: #ffcdd2;
+  background: #fff5f5;
+}
+
+.btn--delete:hover {
+  background: #ffe4e4;
+}
+
+/* ── Habit list ── */
+.habit-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ── Habit card ── */
+.habit-card {
+  border: 1px solid #e4e4e4;
+  border-radius: 8px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.habit-card__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+}
+
+.habit-card__toggle {
+  flex: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.habit-card__name {
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.habit-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.habit-card__badge {
+  font-size: 11px;
+  font-weight: 500;
+  color: #666;
+  background: #f0f0f0;
+  border-radius: 4px;
+  padding: 2px 6px;
+  text-transform: capitalize;
+}
+
+.habit-card__chevron {
+  font-size: 11px;
+  color: #aaa;
+}
+
+.habit-card__actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* ── Per-habit stats panel ── */
+.habit-stats {
+  border-top: 1px solid #f0f0f0;
+  padding: 14px 14px 12px;
+  background: #fafafa;
+}
+
+.habit-stats__message {
+  font-size: 13px;
+  color: #888;
+  margin: 0;
+}
+
+.habit-stats__grid {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 14px;
+}
+
+.habit-stats__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.habit-stats__value {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.habit-stats__label {
+  font-size: 11px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.habit-stats__days-title {
+  font-size: 11px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 6px;
+}
+
+.habit-stats__days {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.habit-stats__day {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: #444;
+}
+
+.habit-stats__day-dot {
+  font-size: 12px;
+  width: 16px;
+  text-align: center;
+}
+
+.habit-stats__day-dot--done {
+  color: #2e7d32;
+}
+
+.habit-stats__day-dot--missed {
+  color: #ccc;
+}
+
+/* ── Global stats ── */
+.stats-card {
+  border: 1px solid #e4e4e4;
+  border-radius: 8px;
+  background: #fff;
+  padding: 18px 20px;
+  margin-bottom: 28px;
+}
+
+.stats-card__title {
+  font-size: 11px;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 16px;
+}
+
+.stats-card__numbers {
+  display: flex;
+  gap: 28px;
+  margin-bottom: 20px;
+}
+
+.stats-card__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stats-card__value {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.5px;
+}
+
+.stats-card__label {
+  font-size: 12px;
+  color: #888;
+}
+
+.stats-card__chart-label {
+  font-size: 11px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 8px;
+}
+
+.stats-card__chart {
+  display: flex;
+  gap: 6px;
+  align-items: flex-end;
+  height: 72px;
+}
+
+.stats-card__bar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.stats-card__bar {
+  width: 100%;
+  border-radius: 3px 3px 0 0;
+  min-height: 3px;
+  transition: height 0.2s ease;
+}
+
+.stats-card__bar--active {
+  background: #1a1a1a;
+}
+
+.stats-card__bar--empty {
+  background: #ebebeb;
+}
+
+.stats-card__bar-date {
+  font-size: 10px;
+  color: #aaa;
+  white-space: nowrap;
+}
