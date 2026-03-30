@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = process.env.REACT_APP_API_URL || "http://127.0.0.1:5000";
+const API = process.env.REACT_APP_API_URL || "habit-tracker-production-5168.up.railway.app";
 
 export const getHabits = () => axios.get(`${API}/habits`).then((r) => r.data);
 export const createHabit = (data) => axios.post(`${API}/habits`, data).then((r) => r.data);
