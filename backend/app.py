@@ -13,6 +13,35 @@ CORS(app, origins=os.environ.get("FRONTEND_URL", "http://localhost:3000"))
 def index():
     return jsonify({"message": "Backend is running"})
 
+@app.route("/debug/db")
+def debug_db():
+    from db import DATABASE
+    db_path = DATABASE
+    file_exists = os.path.exists(db_path)
+    file_size = os.path.getsize(db_path) if file_exists else None
+    data_dir_exists = os.path.exists("/data")
+    data_dir_contents = os.listdir("/data") if data_dir_exists else []
+    try:
+        db = get_db()
+        habit_count = db.execute("SELECT COUNT(*) as cnt FROM habits").fetchone()["cnt"]
+        habits = [dict(h) for h in db.execute("SELECT * FROM habits").fetchall()]
+        db.close()
+        db_readable = True
+    except Exception as e:
+        habit_count = None
+        habits = []
+        db_readable = str(e)
+    return jsonify({
+        "db_path": db_path,
+        "file_exists": file_exists,
+        "file_size_bytes": file_size,
+        "data_dir_exists": data_dir_exists,
+        "data_dir_contents": data_dir_contents,
+        "db_readable": db_readable,
+        "habit_count": habit_count,
+        "habits": habits,
+    })
+
 # --- HABITS CRUD ---
 
 @app.route("/habits", methods=["GET"])
