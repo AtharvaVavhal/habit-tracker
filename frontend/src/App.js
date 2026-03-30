@@ -9,9 +9,10 @@ function AppInner() {
   const [name, setName] = useState("");
   const [type, setType] = useState("daily");
 
-  const addHabit = () => {
+  const addHabit = async () => {
     if (!name.trim()) return;
-    createHabit({ name, type }).then(() => setName(""));
+    await createHabit({ name, type });
+    setName("");
   };
 
   if (initialLoading) return <p className="app-status">Loading...</p>;

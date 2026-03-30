@@ -60,9 +60,24 @@ export function HabitProvider({ children }) {
     return () => clearInterval(intervalRef.current);
   }, [fetchHabits, fetchGlobalStats, revalidate]);
 
-  const createHabit = (data) => {
-    return api.createHabit(data).then(() => revalidate());
-  };
+ const createHabit = async (data) => {
+  try {
+    await api.createHabit(data);
+
+    // 🔥 force fresh data
+    const [habitsData, statsData] = await Promise.all([
+      api.getHabits(),
+      api.getGlobalStats(),
+    ]);
+
+    setHabits(habitsData);
+    setGlobalStats(statsData);
+
+  } catch (err) {
+    console.error("Failed to create habit:", err);
+    setError("Failed to create habit.");
+  }
+};
 
   const completeHabit = (id) => {
     const previousStats = globalStats;
