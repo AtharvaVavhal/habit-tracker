@@ -32,4 +32,10 @@ def init_db():
         CREATE INDEX IF NOT EXISTS idx_completions_date ON completions(completed_date);
     """)
     conn.commit()
+    # Migrate: add user_id column if not already present
+    try:
+        conn.execute("ALTER TABLE habits ADD COLUMN user_id TEXT NOT NULL DEFAULT ''")
+        conn.commit()
+    except Exception:
+        pass  # column already exists
     conn.close()

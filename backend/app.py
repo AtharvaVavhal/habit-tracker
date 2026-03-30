@@ -9,6 +9,13 @@ import os
 app = Flask(__name__)
 CORS(app, origins=os.environ.get("FRONTEND_URL", "http://localhost:3000"))
 
+
+def get_user_id():
+    """Extract userId from query params (GET) or JSON body (POST/DELETE)."""
+    uid = request.args.get("userId") or (request.get_json(silent=True) or {}).get("userId", "")
+    return uid.strip() if uid else ""
+
+
 @app.route("/")
 def index():
     return jsonify({"message": "Backend is running"})
@@ -46,8 +53,12 @@ def debug_db():
 
 @app.route("/habits", methods=["GET"])
 def get_habits():
+    user_id = get_user_id()
+    if not user_id:
+        return jsonify({"error": "userId is required"}), 400
+
     db = get_db()
-    rows = db.execute("SELECT * FROM habits").fetchall()
+    rows = db.execute("SELECT * FROM habits WHERE user_id = ?", (user_id,)).fetchall()
     habits = [dict(row) for row in rows]
     db.close()
     return jsonify(habits)
@@ -55,9 +66,12 @@ def get_habits():
 @app.route("/habits", methods=["POST"])
 def create_habit():
     data = request.get_json()
+    user_id = (data.get("userId") or "").strip()
     name = data.get("name", "").strip()
     habit_type = data.get("type", "daily")
 
+    if not user_id:
+        return jsonify({"error": "userId is required"}), 400
     if not name:
         return jsonify({"error": "Name is required"}), 400
     if habit_type not in ("daily", "weekly"):
@@ -65,7 +79,8 @@ def create_habit():
 
     db = get_db()
     cursor = db.execute(
-        "INSERT INTO habits (name, type) VALUES (?, ?)", (name, habit_type)
+        "INSERT INTO habits (name, type, user_id) VALUES (?, ?, ?)",
+        (name, habit_type, user_id),
     )
     db.commit()
     habit = db.execute("SELECT * FROM habits WHERE id = ?", (cursor.lastrowid,)).fetchone()
@@ -74,8 +89,12 @@ def create_habit():
 
 @app.route("/habits/<int:habit_id>", methods=["DELETE"])
 def delete_habit(habit_id):
+    user_id = get_user_id()
+    if not user_id:
+        return jsonify({"error": "userId is required"}), 400
+
     db = get_db()
-    db.execute("DELETE FROM habits WHERE id = ?", (habit_id,))
+    db.execute("DELETE FROM habits WHERE id = ? AND user_id = ?", (habit_id, user_id))
     db.commit()
     db.close()
     return jsonify({"message": "Deleted"}), 200
@@ -84,8 +103,20 @@ def delete_habit(habit_id):
 
 @app.route("/habits/<int:habit_id>/complete", methods=["POST"])
 def complete_habit(habit_id):
+    data = request.get_json() or {}
+    user_id = data.get("userId", "").strip()
+    if not user_id:
+        return jsonify({"error": "userId is required"}), 400
+
     today = date.today().isoformat()
     db = get_db()
+
+    habit = db.execute(
+        "SELECT id FROM habits WHERE id = ? AND user_id = ?", (habit_id, user_id)
+    ).fetchone()
+    if not habit:
+        db.close()
+        return jsonify({"error": "Habit not found"}), 404
 
     existing = db.execute(
         "SELECT id FROM completions WHERE habit_id = ? AND completed_date = ?",
@@ -108,13 +139,22 @@ def complete_habit(habit_id):
 
 @app.route("/stats", methods=["GET"])
 def global_stats():
-    return jsonify(get_global_stats())
+    user_id = get_user_id()
+    if not user_id:
+        return jsonify({"error": "userId is required"}), 400
+    return jsonify(get_global_stats(user_id))
 
 @app.route("/habits/<int:habit_id>/stats", methods=["GET"])
 def get_stats(habit_id):
+    user_id = get_user_id()
+    if not user_id:
+        return jsonify({"error": "userId is required"}), 400
+
     db = get_db()
 
-    habit = db.execute("SELECT * FROM habits WHERE id = ?", (habit_id,)).fetchone()
+    habit = db.execute(
+        "SELECT * FROM habits WHERE id = ? AND user_id = ?", (habit_id, user_id)
+    ).fetchone()
     if not habit:
         db.close()
         return jsonify({"error": "Habit not found"}), 404
@@ -234,6 +274,7 @@ def _longest_streak_weekly(dates):
         else:
             current = 1
     return longest
+
 
 init_db()
 
