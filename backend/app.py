@@ -57,8 +57,19 @@ def get_habits():
     if not user_id:
         return jsonify({"error": "userId is required"}), 400
 
+    today = date.today().isoformat()
     db = get_db()
-    rows = db.execute("SELECT * FROM habits WHERE user_id = ?", (user_id,)).fetchall()
+    rows = db.execute(
+        """
+        SELECT h.*,
+               CASE WHEN c.id IS NOT NULL THEN 1 ELSE 0 END AS completed_today
+        FROM habits h
+        LEFT JOIN completions c
+          ON c.habit_id = h.id AND c.completed_date = ?
+        WHERE h.user_id = ?
+        """,
+        (today, user_id),
+    ).fetchall()
     habits = [dict(row) for row in rows]
     db.close()
     return jsonify(habits)

@@ -15,38 +15,54 @@ function AppInner() {
     setName("");
   };
 
-  if (initialLoading) return <p className="app-status">Loading...</p>;
+  if (initialLoading) {
+    return <div className="app-loading">Loading…</div>;
+  }
 
   return (
     <div className="app">
-      <header className="app-header">
-        <h1 className="app-title">Habit Tracker</h1>
-        <p className={`app-status ${error ? "app-status--error" : ""}`}>
-          {error ? error : isRefreshing ? "Updating..." : ""}
-        </p>
-      </header>
+      <div className="app__inner">
+        <header className="app-header">
+          <div className="app-header__top">
+            <h1 className="app-title">Habit Tracker</h1>
+            <a href="/" className="app-back">← Home</a>
+          </div>
+          <p className={`app-status${error ? " app-status--error" : ""}`}>
+            {error ? error : isRefreshing ? "Updating…" : ""}
+          </p>
+        </header>
 
-      <Stats />
+        <Stats />
 
-      <form
-        className="habit-form"
-        onSubmit={(e) => { e.preventDefault(); addHabit(); }}
-      >
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="New habit name"
-        />
-        <select value={type} onChange={(e) => setType(e.target.value)}>
-          <option value="daily">Daily</option>
-          <option value="weekly">Weekly</option>
-        </select>
-        <button type="submit" className="btn btn--primary" disabled={creatingHabit}>
-          {creatingHabit ? "..." : "Add"}
-        </button>
-      </form>
+        <form
+          className="habit-form"
+          onSubmit={(e) => { e.preventDefault(); addHabit(); }}
+        >
+          <input
+            className="habit-form__input"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="New habit name"
+          />
+          <div className="type-toggle">
+            {["daily", "weekly"].map((t) => (
+              <button
+                key={t}
+                type="button"
+                className={`type-toggle__btn${type === t ? " type-toggle__btn--active" : ""}`}
+                onClick={() => setType(t)}
+              >
+                {t.charAt(0).toUpperCase() + t.slice(1)}
+              </button>
+            ))}
+          </div>
+          <button type="submit" className="btn btn--primary" disabled={creatingHabit}>
+            {creatingHabit ? "…" : "Add"}
+          </button>
+        </form>
 
-      <HabitList />
+        <HabitList />
+      </div>
     </div>
   );
 }
