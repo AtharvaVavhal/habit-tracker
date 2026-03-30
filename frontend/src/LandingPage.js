@@ -3,76 +3,86 @@ import "./LandingPage.css";
 
 const APP_URL = "/app";
 
+/* Scroll reveal — fires once per element, spring easing via CSS */
 function useScrollReveal() {
   useEffect(() => {
     const els = document.querySelectorAll(".reveal");
-    const observer = new IntersectionObserver(
+    const io = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("reveal--visible");
-            observer.unobserve(entry.target);
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("reveal--visible");
+            io.unobserve(e.target);
           }
         });
       },
-      { threshold: 0.12 }
+      { threshold: 0.1, rootMargin: "0px 0px -40px 0px" }
     );
-    els.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
   }, []);
 }
 
+/* ── Hero ── */
 function Hero() {
   return (
     <section className="hero">
       <div className="hero__inner">
-        <p className="hero__eyebrow">Habit Tracker</p>
-        <h1 className="hero__title">
-          Build habits that<br />actually stick.
+        <p className="hero__eyebrow hero--enter-1">Daily habits. Weekly goals.</p>
+        <h1 className="hero__title hero--enter-2">
+          The habit tracker<br />that stays honest.
         </h1>
-        <p className="hero__subtitle">
-          Track daily and weekly habits, watch your streaks grow,
-          and understand your consistency — all in one minimal app.
+        <p className="hero__subtitle hero--enter-3">
+          Accurate streaks, real completion rates, and instant feedback —
+          built for people who want clarity, not motivation theater.
         </p>
-        <a href={APP_URL} className="btn-primary">
-          Open App
-        </a>
+        <div className="hero__actions hero--enter-4">
+          <a href={APP_URL} className="btn-primary">Open App</a>
+          <a href="#features" className="btn-ghost">See features ↓</a>
+        </div>
       </div>
     </section>
   );
 }
 
+/* ── Features ── */
 const FEATURES = [
   {
-    title: "Daily & weekly tracking",
-    body: "Create habits on any cadence. Daily habits track consecutive days; weekly habits track ISO weeks — each measured correctly.",
+    icon: "◎",
+    title: "Daily & weekly cadence",
+    body: "Create habits on any schedule. Daily habits track consecutive days; weekly habits track ISO weeks — each measured from its own creation date.",
   },
   {
-    title: "Accurate stats",
-    body: "Streaks, completion rates, and 7-day history calculated per habit, from its exact creation date. No inflated numbers.",
+    icon: "◈",
+    title: "Honest stats",
+    body: "Completion rate uses your actual creation date as the denominator. No flattering math, no inflated numbers.",
   },
   {
-    title: "Instant updates",
-    body: "Optimistic UI means the app responds immediately on every action. If the server disagrees, it rolls back silently.",
+    icon: "⟳",
+    title: "Instant response",
+    body: "Optimistic UI updates the screen before the server responds. If the API fails, it rolls back silently.",
   },
   {
-    title: "Persistent data",
-    body: "Everything is stored server-side and survives page reloads, new devices, and browser restarts.",
+    icon: "◉",
+    title: "Persistent history",
+    body: "Everything lives server-side. Your streaks and history survive tab closes, page reloads, and new devices.",
   },
 ];
 
 function Features() {
   return (
-    <section className="section features">
+    <section className="section" id="features">
       <div className="section__inner">
-        <div className="section__header reveal">
-          <h2 className="section__title">Everything you need.</h2>
-          <p className="section__subtitle">Nothing you don't.</p>
-        </div>
+        <div className="section__label reveal">Features</div>
+        <h2 className="section__title reveal">Built to be accurate,<br />not just pretty.</h2>
         <div className="features__grid">
           {FEATURES.map((f, i) => (
-            <div className="feature-card reveal" key={i} style={{ "--delay": `${i * 80}ms` }}>
-              <div className="feature-card__index">{String(i + 1).padStart(2, "0")}</div>
+            <div
+              className="feature-card reveal"
+              key={i}
+              style={{ "--delay": `${i * 70}ms` }}
+            >
+              <span className="feature-card__icon">{f.icon}</span>
               <h3 className="feature-card__title">{f.title}</h3>
               <p className="feature-card__body">{f.body}</p>
             </div>
@@ -83,26 +93,42 @@ function Features() {
   );
 }
 
+/* ── How it works ── */
 const STEPS = [
-  { step: "01", title: "Create", body: "Name your habit and choose daily or weekly." },
-  { step: "02", title: "Complete", body: "Mark it done each day or week with one click." },
-  { step: "03", title: "Track", body: "Watch streaks grow and completion rates rise." },
+  {
+    num: "1",
+    title: "Create a habit",
+    body: "Give it a name. Choose daily or weekly. Done in five seconds.",
+  },
+  {
+    num: "2",
+    title: "Mark it complete",
+    body: "One click. The app updates instantly. No loading spinners.",
+  },
+  {
+    num: "3",
+    title: "Read your stats",
+    body: "Current streak, longest streak, 7-day view, completion rate. All real numbers.",
+  },
 ];
 
 function HowItWorks() {
   return (
-    <section className="section how">
+    <section className="section section--alt">
       <div className="section__inner">
-        <div className="section__header reveal">
-          <h2 className="section__title">How it works.</h2>
-        </div>
-        <div className="how__steps">
+        <div className="section__label reveal">How it works</div>
+        <h2 className="section__title reveal">Three steps.<br />No friction.</h2>
+        <div className="steps">
           {STEPS.map((s, i) => (
-            <div className="how__step reveal" key={i} style={{ "--delay": `${i * 100}ms` }}>
-              <span className="how__step-number">{s.step}</span>
-              <div className="how__step-content">
-                <h3 className="how__step-title">{s.title}</h3>
-                <p className="how__step-body">{s.body}</p>
+            <div
+              className="step reveal"
+              key={i}
+              style={{ "--delay": `${i * 90}ms` }}
+            >
+              <div className="step__num">{s.num}</div>
+              <div className="step__content">
+                <h3 className="step__title">{s.title}</h3>
+                <p className="step__body">{s.body}</p>
               </div>
             </div>
           ))}
@@ -112,35 +138,50 @@ function HowItWorks() {
   );
 }
 
+/* ── CTA band ── */
+function CTABand() {
+  return (
+    <section className="cta-band">
+      <div className="cta-band__inner reveal">
+        <h2 className="cta-band__title">Start tracking today.</h2>
+        <a href={APP_URL} className="btn-primary btn-primary--large">
+          Open App
+        </a>
+      </div>
+    </section>
+  );
+}
+
+/* ── Tech ── */
 function TechStack() {
   return (
-    <section className="section tech">
+    <section className="section">
       <div className="section__inner">
-        <div className="tech__inner reveal">
-          <p className="tech__label">Built with</p>
-          <div className="tech__pills">
-            {["Flask", "React", "SQLite", "Optimistic UI", "Async-safe state"].map((t) => (
-              <span className="tech__pill" key={t}>{t}</span>
-            ))}
-          </div>
+        <div className="tech reveal">
+          <span className="tech__label">Built with</span>
+          {["Flask", "React", "SQLite", "Optimistic UI", "Async-safe state"].map((t) => (
+            <span className="tech__pill" key={t}>{t}</span>
+          ))}
         </div>
       </div>
     </section>
   );
 }
 
+/* ── Footer ── */
 function Footer() {
   return (
     <footer className="footer">
       <div className="footer__inner">
-        <span className="footer__name">Habit Tracker</span>
-        <span className="footer__sep">·</span>
-        <span className="footer__note">Flask + React</span>
+        <span className="footer__brand">Habit Tracker</span>
+        <span className="footer__dot">·</span>
+        <span className="footer__note">Flask + React · Railway + Vercel</span>
       </div>
     </footer>
   );
 }
 
+/* ── Root ── */
 function LandingPage() {
   useScrollReveal();
   return (
@@ -148,6 +189,7 @@ function LandingPage() {
       <Hero />
       <Features />
       <HowItWorks />
+      <CTABand />
       <TechStack />
       <Footer />
     </div>
