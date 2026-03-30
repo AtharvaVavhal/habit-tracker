@@ -1,9 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import "./LandingPage.css";
 
 const APP_URL = "/app";
 
-/* Scroll reveal — fires once per element, spring easing via CSS */
+/* Scroll reveal — fires once per element */
 function useScrollReveal() {
   useEffect(() => {
     const els = document.querySelectorAll(".reveal");
@@ -37,11 +37,92 @@ function Hero() {
           built for people who want clarity, not motivation theater.
         </p>
         <div className="hero__actions hero--enter-4">
-          <a href={APP_URL} className="btn-primary">Open App</a>
-          <a href="#features" className="btn-ghost">See features ↓</a>
+          <a href={APP_URL} className="btn-primary">Start tracking →</a>
+          <a href="#features" className="btn-ghost">See how it works</a>
         </div>
       </div>
     </section>
+  );
+}
+
+/* ── Product Preview ── */
+function ProductPreview() {
+  const chromeRef = useRef(null);
+
+  useEffect(() => {
+    const handle = () => {
+      if (!chromeRef.current) return;
+      const section = chromeRef.current.closest(".preview-section");
+      if (!section) return;
+      const rect = section.getBoundingClientRect();
+      const progress = (-rect.top / window.innerHeight) * 0.5;
+      const clamped = Math.max(-0.05, Math.min(0.4, progress));
+      chromeRef.current.style.transform = `translateY(${clamped * 32}px)`;
+    };
+    window.addEventListener("scroll", handle, { passive: true });
+    return () => window.removeEventListener("scroll", handle);
+  }, []);
+
+  const habits = [
+    { name: "Morning run", done: true, type: "Daily" },
+    { name: "Read 30 min", done: true, type: "Daily" },
+    { name: "No sugar", done: false, type: "Daily" },
+    { name: "Weekly review", done: false, type: "Weekly" },
+  ];
+
+  return (
+    <div className="preview-section">
+      <div className="preview-section__inner">
+        <div className="preview-wrap reveal">
+          <div className="preview-chrome" ref={chromeRef}>
+            <div className="mock-topbar">
+              <span className="mock-topbar__title">My Habits</span>
+              <span className="mock-topbar__date">Mon, Mar 30</span>
+            </div>
+            <div className="mock-statsrow">
+              <div className="mock-stat-block">
+                <div className="mock-stat-block__num">7</div>
+                <div className="mock-stat-block__label">Day streak</div>
+              </div>
+              <div className="mock-stat-divider" />
+              <div className="mock-stat-block">
+                <div className="mock-stat-block__num">84%</div>
+                <div className="mock-stat-block__label">Completion</div>
+              </div>
+              <div className="mock-stat-divider" />
+              <div className="mock-stat-block">
+                <div className="mock-stat-block__num">3/4</div>
+                <div className="mock-stat-block__label">Done today</div>
+              </div>
+            </div>
+            <div className="mock-list">
+              {habits.map((h, i) => (
+                <div className={`mock-item${h.done ? " mock-item--done" : ""}`} key={i}>
+                  <div className="mock-item__check">
+                    {h.done ? (
+                      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                        <circle cx="9" cy="9" r="9" fill="#1d1d1f" />
+                        <path
+                          d="M5.5 9.5L7.5 11.5L12.5 6.5"
+                          stroke="white"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    ) : (
+                      <div className="mock-item__check-empty" />
+                    )}
+                  </div>
+                  <span className="mock-item__name">{h.name}</span>
+                  <span className="mock-item__type">{h.type}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -143,10 +224,15 @@ function CTABand() {
   return (
     <section className="cta-band">
       <div className="cta-band__inner reveal">
-        <h2 className="cta-band__title">Start tracking today.</h2>
-        <a href={APP_URL} className="btn-primary btn-primary--large">
-          Open App
-        </a>
+        <h2 className="cta-band__title">Start building<br />better habits.</h2>
+        <div className="cta-band__actions">
+          <a href={APP_URL} className="btn-primary btn-primary--large btn-primary--invert">
+            Start tracking →
+          </a>
+          <a href="#features" className="btn-ghost btn-ghost--bordered">
+            See how it works
+          </a>
+        </div>
       </div>
     </section>
   );
@@ -187,6 +273,7 @@ function LandingPage() {
   return (
     <div className="landing">
       <Hero />
+      <ProductPreview />
       <Features />
       <HowItWorks />
       <CTABand />

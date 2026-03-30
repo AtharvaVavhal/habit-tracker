@@ -3,31 +3,31 @@
 ───────────────────────────────────────── */
 :root {
   --black:       #050505;
-  --ink:         #1d1d1f;        /* Apple's body text color */
+  --ink:         #1d1d1f;
   --mid:         #494949;
-  --muted:       #6e6e73;        /* Apple's secondary label */
+  --muted:       #6e6e73;
   --faint:       #aeaeb2;
-  --rule:        #d2d2d7;        /* Apple's separator */
+  --rule:        #d2d2d7;
   --rule-light:  #f0f0f2;
-  --surface:     #fbfbfd;        /* Apple's grouped background */
+  --surface:     #fbfbfd;
   --white:       #ffffff;
 
   --max:         920px;
   --pad-x:       40px;
 
-  /* Apple's spring easing */
   --spring:      cubic-bezier(0.22, 1, 0.36, 1);
-  /* Decelerate — for reveals */
   --decel:       cubic-bezier(0.0, 0.0, 0.2, 1);
-  /* Standard */
-  --ease:        cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 /* ─────────────────────────────────────────
    Base
 ───────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+}
+
 .landing {
-  background: var(--white);
+  background: linear-gradient(180deg, #ffffff 0%, #f8f9fb 35%, #ffffff 70%);
   color: var(--ink);
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
                "SF Pro Text", "Helvetica Neue", sans-serif;
@@ -42,45 +42,27 @@
   padding: 0;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 /* ─────────────────────────────────────────
-   Hero entrance — CSS keyframe sequence
+   Hero entrance
 ───────────────────────────────────────── */
 @keyframes hero-up {
-  from {
-    opacity: 0;
-    transform: translateY(28px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-.hero--enter-1 {
-  animation: hero-up 0.7s var(--spring) 0.05s both;
-}
-.hero--enter-2 {
-  animation: hero-up 0.8s var(--spring) 0.15s both;
-}
-.hero--enter-3 {
-  animation: hero-up 0.8s var(--spring) 0.28s both;
-}
-.hero--enter-4 {
-  animation: hero-up 0.7s var(--spring) 0.42s both;
-}
+.hero--enter-1 { animation: hero-up 0.7s var(--spring) 0.05s both; }
+.hero--enter-2 { animation: hero-up 0.8s var(--spring) 0.15s both; }
+.hero--enter-3 { animation: hero-up 0.8s var(--spring) 0.28s both; }
+.hero--enter-4 { animation: hero-up 0.7s var(--spring) 0.42s both; }
 
 /* ─────────────────────────────────────────
    Scroll reveal
 ───────────────────────────────────────── */
 .reveal {
   opacity: 0;
-  transform: translateY(24px);
+  transform: translateY(20px);
   transition:
-    opacity  0.65s var(--decel),
+    opacity   0.65s var(--decel),
     transform 0.65s var(--spring);
   transition-delay: var(--delay, 0ms);
   will-change: opacity, transform;
@@ -106,10 +88,12 @@ html {
   letter-spacing: -0.1px;
   border-radius: 980px;
   text-decoration: none;
+  border: 1.5px solid var(--black);
   transition:
-    transform  0.3s var(--spring),
-    box-shadow 0.3s var(--ease),
-    background 0.2s var(--ease);
+    transform    0.4s var(--spring),
+    box-shadow   0.3s var(--decel),
+    background   0.25s var(--decel),
+    color        0.25s var(--decel);
   box-shadow:
     0 1px 2px rgba(0,0,0,0.10),
     0 2px 8px rgba(0,0,0,0.08);
@@ -123,14 +107,23 @@ html {
 }
 
 .btn-primary:active {
-  transform: scale(0.98);
+  transform: scale(0.97);
   box-shadow: 0 1px 2px rgba(0,0,0,0.10);
-  transition-duration: 0.1s;
+  transition:
+    transform  0.1s var(--spring),
+    box-shadow 0.1s var(--decel);
 }
 
 .btn-primary--large {
   padding: 16px 44px;
   font-size: 17px;
+}
+
+/* CTA invert — used in dark CTA section */
+.btn-primary--invert:hover {
+  background: var(--white);
+  color: var(--black);
+  border-color: var(--black);
 }
 
 .btn-ghost {
@@ -143,14 +136,38 @@ html {
   text-decoration: none;
   border-radius: 980px;
   transition:
-    color     0.2s var(--ease),
-    transform 0.3s var(--spring);
+    color     0.25s var(--decel),
+    transform 0.4s var(--spring);
   letter-spacing: -0.1px;
 }
 
 .btn-ghost:hover {
   color: var(--ink);
   transform: translateX(3px);
+}
+
+/* Bordered ghost — used in CTA band */
+.btn-ghost--bordered {
+  color: var(--ink);
+  border: 1.5px solid var(--rule);
+  padding: 14px 28px;
+  transition:
+    color        0.25s var(--decel),
+    background   0.25s var(--decel),
+    border-color 0.25s var(--decel),
+    transform    0.4s var(--spring);
+}
+
+.btn-ghost--bordered:hover {
+  background: var(--black);
+  color: var(--white);
+  border-color: var(--black);
+  transform: none;
+}
+
+.btn-ghost--bordered.btn-primary--large {
+  padding: 16px 36px;
+  font-size: 17px;
 }
 
 /* ─────────────────────────────────────────
@@ -206,6 +223,149 @@ html {
 }
 
 /* ─────────────────────────────────────────
+   Product Preview
+───────────────────────────────────────── */
+.preview-section {
+  padding: 80px var(--pad-x) 120px;
+  border-bottom: 1px solid var(--rule-light);
+  overflow: hidden;
+}
+
+.preview-section__inner {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.preview-chrome {
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: 20px;
+  box-shadow:
+    0 2px 4px rgba(0,0,0,0.03),
+    0 8px 24px rgba(0,0,0,0.05),
+    0 32px 80px rgba(0,0,0,0.06);
+  overflow: hidden;
+  will-change: transform;
+  transition: transform 0.08s linear;
+}
+
+.mock-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 28px 18px;
+  border-bottom: 1px solid var(--rule-light);
+}
+
+.mock-topbar__title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--black);
+  letter-spacing: -0.4px;
+}
+
+.mock-topbar__date {
+  font-size: 13px;
+  color: var(--muted);
+  letter-spacing: -0.1px;
+}
+
+.mock-statsrow {
+  display: flex;
+  align-items: center;
+  padding: 18px 28px;
+  border-bottom: 1px solid var(--rule-light);
+  background: var(--surface);
+}
+
+.mock-stat-block {
+  flex: 1;
+  text-align: center;
+}
+
+.mock-stat-block__num {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--black);
+  letter-spacing: -1px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.mock-stat-block__label {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.mock-stat-divider {
+  width: 1px;
+  height: 36px;
+  background: var(--rule);
+  flex-shrink: 0;
+}
+
+.mock-list {
+  /* container */
+}
+
+.mock-item {
+  display: flex;
+  align-items: center;
+  padding: 16px 28px;
+  border-bottom: 1px solid var(--rule-light);
+  gap: 14px;
+}
+
+.mock-item:last-child {
+  border-bottom: none;
+}
+
+.mock-item__check {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mock-item__check-empty {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid var(--rule);
+}
+
+.mock-item__name {
+  flex: 1;
+  font-size: 15px;
+  color: var(--ink);
+  font-weight: 400;
+  letter-spacing: -0.1px;
+}
+
+.mock-item--done .mock-item__name {
+  color: var(--muted);
+  text-decoration: line-through;
+  text-decoration-color: var(--faint);
+}
+
+.mock-item__type {
+  font-size: 11px;
+  color: var(--faint);
+  font-weight: 500;
+  background: var(--surface);
+  border: 1px solid var(--rule-light);
+  border-radius: 980px;
+  padding: 3px 10px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+/* ─────────────────────────────────────────
    Section shell
 ───────────────────────────────────────── */
 .section {
@@ -241,7 +401,7 @@ html {
 }
 
 /* ─────────────────────────────────────────
-   Feature cards
+   Feature cards — bento grid
 ───────────────────────────────────────── */
 .features__grid {
   display: grid;
@@ -254,6 +414,12 @@ html {
   box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
 
+/* First and last span full width (bento bookend) */
+.feature-card:first-child,
+.feature-card:last-child {
+  grid-column: 1 / -1;
+}
+
 .feature-card {
   background: var(--white);
   padding: 44px 40px;
@@ -261,12 +427,31 @@ html {
   flex-direction: column;
   gap: 14px;
   transition:
-    background  0.25s var(--ease),
-    transform   0.35s var(--spring);
+    background  0.25s var(--decel),
+    box-shadow  0.25s var(--decel);
 }
 
 .feature-card:hover {
   background: var(--surface);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06);
+}
+
+/* Featured card: larger, richer */
+.feature-card:first-child {
+  padding: 56px 48px;
+}
+
+.feature-card:first-child .feature-card__icon {
+  font-size: 24px;
+}
+
+.feature-card:first-child .feature-card__title {
+  font-size: 22px;
+}
+
+.feature-card:first-child .feature-card__body {
+  font-size: 15px;
+  max-width: 520px;
 }
 
 .feature-card__icon {
@@ -311,7 +496,7 @@ html {
   padding: 40px 44px;
   border-bottom: 1px solid var(--rule);
   background: var(--white);
-  transition: background 0.2s var(--ease);
+  transition: background 0.25s var(--decel);
 }
 
 .step:last-child {
@@ -351,7 +536,7 @@ html {
    CTA band
 ───────────────────────────────────────── */
 .cta-band {
-  padding: 120px var(--pad-x);
+  padding: 140px var(--pad-x);
   text-align: center;
   border-bottom: 1px solid var(--rule-light);
 }
@@ -362,15 +547,23 @@ html {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 40px;
+  gap: 48px;
 }
 
 .cta-band__title {
-  font-size: 56px;
+  font-size: 60px;
   font-weight: 700;
-  letter-spacing: -2px;
-  line-height: 1.05;
+  letter-spacing: -2.5px;
+  line-height: 1.04;
   color: var(--black);
+}
+
+.cta-band__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 /* ─────────────────────────────────────────
@@ -402,8 +595,8 @@ html {
   padding: 5px 13px;
   letter-spacing: -0.1px;
   transition:
-    border-color 0.2s var(--ease),
-    color        0.2s var(--ease);
+    border-color 0.25s var(--decel),
+    color        0.25s var(--decel);
 }
 
 .tech__pill:hover {
@@ -480,8 +673,21 @@ html {
     grid-template-columns: 1fr;
   }
 
+  .feature-card:first-child,
+  .feature-card:last-child {
+    grid-column: 1;
+  }
+
   .feature-card {
     padding: 36px 32px;
+  }
+
+  .feature-card:first-child {
+    padding: 40px 32px;
+  }
+
+  .feature-card:first-child .feature-card__title {
+    font-size: 20px;
   }
 
   .step {
@@ -490,13 +696,21 @@ html {
     gap: 16px;
   }
 
+  .cta-band {
+    padding: 100px var(--pad-x);
+  }
+
   .cta-band__title {
     font-size: 38px;
-    letter-spacing: -1.2px;
+    letter-spacing: -1.5px;
   }
 
   .tech {
     gap: 8px;
+  }
+
+  .preview-section {
+    padding: 60px var(--pad-x) 88px;
   }
 }
 
@@ -517,5 +731,27 @@ html {
 
   .cta-band__title {
     font-size: 32px;
+    letter-spacing: -1px;
+  }
+
+  .cta-band__actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .cta-band__actions .btn-primary,
+  .cta-band__actions .btn-ghost--bordered {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .mock-statsrow {
+    padding: 14px 20px;
+  }
+
+  .mock-topbar,
+  .mock-item {
+    padding-left: 20px;
+    padding-right: 20px;
   }
 }
