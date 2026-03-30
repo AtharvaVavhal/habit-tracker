@@ -47,9 +47,10 @@ def debug_db():
 @app.route("/habits", methods=["GET"])
 def get_habits():
     db = get_db()
-    habits = db.execute("SELECT * FROM habits ORDER BY created_at DESC").fetchall()
+    rows = db.execute("SELECT * FROM habits").fetchall()
+    habits = [dict(row) for row in rows]
     db.close()
-    return jsonify([dict(h) for h in habits])
+    return jsonify(habits)
 
 @app.route("/habits", methods=["POST"])
 def create_habit():
